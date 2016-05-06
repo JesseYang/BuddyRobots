@@ -78,14 +78,13 @@ namespace OpenCVForUnitySample
 
         public bool shouldUseFrontFacing = true;
 
-        int width = 1280;
-        int height = 720;
+        int width = 1920;
+        int height = 1080;
 
         Mat rgbaMat;
 
         int p1 = 9;
         int p2 = 3;
-        bool m_Flip;
 
         /**** for Frame ****/
         List<Point> m_Frame;
@@ -164,17 +163,17 @@ namespace OpenCVForUnitySample
 
             /**** for Frame *****/
             m_Frame = new List<Point>(4);
-            m_Frame.Add(new Point(240, 30));
-            m_Frame.Add(new Point(880, 180));
-            m_Frame.Add(new Point(880, 540));
-            m_Frame.Add(new Point(240, 690));
+            m_Frame.Add(new Point(360, 45));
+            m_Frame.Add(new Point(1320, 270));
+            m_Frame.Add(new Point(1320, 810));
+            m_Frame.Add(new Point(360, 1035));
             m_FrameMat = new Mat(webCamTexture.height, webCamTexture.width, CvType.CV_8UC4);
 
             List<Point> points = new List<Point>(4);
             points.Add(new Point(0, 0));
-            points.Add(new Point(1280, 0));
-            points.Add(new Point(1280, 720));
-            points.Add(new Point(0, 720));
+            points.Add(new Point(1920, 0));
+            points.Add(new Point(1920, 1080));
+            points.Add(new Point(0, 1080));
 
             m_Homography = Calib3d.findHomography(new MatOfPoint2f(m_Frame.ToArray()), new MatOfPoint2f(points.ToArray()));
             m_ChangeView = false;
@@ -208,8 +207,6 @@ namespace OpenCVForUnitySample
             /**** for figture detect and submit ****/
             m_FigToSubmit = new Mat();
             /***************************************/
-
-            m_Flip = false;
 
             while (true)
             {
@@ -286,8 +283,7 @@ namespace OpenCVForUnitySample
                 }
                 */
 
-                if (m_Flip == true)
-                    Core.flip(rgbaMat, rgbaMat, 1);
+                Core.flip(rgbaMat, rgbaMat, 1);
 
                 if (m_ChangeView)
                 {
@@ -297,8 +293,8 @@ namespace OpenCVForUnitySample
                 {
                     Imgproc.cvtColor(rgbaMat, m_Gray, Imgproc.COLOR_BGR2GRAY);
                 }
-                // Imgproc.adaptiveThreshold(m_Gray, m_Binary, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, p1, p2);
-                Imgproc.threshold(m_Gray, m_Binary, 135, 255, Imgproc.THRESH_BINARY);
+                Imgproc.adaptiveThreshold(m_Gray, m_Binary, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 19, 5);
+                // Imgproc.threshold(m_Gray, m_Binary, 135, 255, Imgproc.THRESH_BINARY);
                 // Imgproc.threshold(m_Gray, m_Binary, 255 * 2.8 / 5, 255, Imgproc.THRESH_BINARY);
                 DetectChange();
 
@@ -364,7 +360,7 @@ namespace OpenCVForUnitySample
                     Core.line(rgbaMat, m_Frame[1], m_Frame[2], new Scalar(255, 0, 0), 3);
                     Core.line(rgbaMat, m_Frame[2], m_Frame[3], new Scalar(255, 0, 0), 3);
                     Core.line(rgbaMat, m_Frame[3], m_Frame[0], new Scalar(255, 0, 0), 3);
-                    Utils.matToTexture2D(m_Binary, texture, colors);
+                    Utils.matToTexture2D(rgbaMat, texture, colors);
                     // Utils.matToTexture2D(m_Binary, texture, colors);
                     /*
                     Mat subMat = new Mat(28, 28, CvType.CV_8UC4);
@@ -700,7 +696,6 @@ namespace OpenCVForUnitySample
 
         public void StartDetectFigure()
         {
-            m_Flip = !m_Flip;
             m_DetectFigure = true;
             m_DetectCard = false;
             m_DetectSquare = false;
