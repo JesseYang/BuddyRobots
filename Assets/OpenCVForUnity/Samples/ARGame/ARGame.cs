@@ -364,7 +364,7 @@ namespace OpenCVForUnitySample
                     Core.line(rgbaMat, m_Frame[1], m_Frame[2], new Scalar(255, 0, 0), 3);
                     Core.line(rgbaMat, m_Frame[2], m_Frame[3], new Scalar(255, 0, 0), 3);
                     Core.line(rgbaMat, m_Frame[3], m_Frame[0], new Scalar(255, 0, 0), 3);
-                    Utils.matToTexture2D(rgbaMat, texture, colors);
+                    Utils.matToTexture2D(m_Binary, texture, colors);
                     // Utils.matToTexture2D(m_Binary, texture, colors);
                     /*
                     Mat subMat = new Mat(28, 28, CvType.CV_8UC4);
