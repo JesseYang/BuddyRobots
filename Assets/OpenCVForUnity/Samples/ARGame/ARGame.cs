@@ -163,17 +163,17 @@ namespace OpenCVForUnitySample
 
             /**** for Frame *****/
             m_Frame = new List<Point>(4);
-            m_Frame.Add(new Point(360, 45));
-            m_Frame.Add(new Point(1320, 270));
-            m_Frame.Add(new Point(1320, 810));
-            m_Frame.Add(new Point(360, 1035));
+            m_Frame.Add(new Point(240, 30));
+            m_Frame.Add(new Point(880, 180));
+            m_Frame.Add(new Point(880, 540));
+            m_Frame.Add(new Point(240, 690));
             m_FrameMat = new Mat(webCamTexture.height, webCamTexture.width, CvType.CV_8UC4);
 
             List<Point> points = new List<Point>(4);
             points.Add(new Point(0, 0));
-            points.Add(new Point(1920, 0));
-            points.Add(new Point(1920, 1080));
-            points.Add(new Point(0, 1080));
+            points.Add(new Point(1280, 0));
+            points.Add(new Point(1280, 720));
+            points.Add(new Point(0, 720));
 
             m_Homography = Calib3d.findHomography(new MatOfPoint2f(m_Frame.ToArray()), new MatOfPoint2f(points.ToArray()));
             m_ChangeView = false;
@@ -356,12 +356,13 @@ namespace OpenCVForUnitySample
                 }
                 else
                 {
+                    /*
                     Core.line(rgbaMat, m_Frame[0], m_Frame[1], new Scalar(255, 0, 0), 3);
                     Core.line(rgbaMat, m_Frame[1], m_Frame[2], new Scalar(255, 0, 0), 3);
                     Core.line(rgbaMat, m_Frame[2], m_Frame[3], new Scalar(255, 0, 0), 3);
                     Core.line(rgbaMat, m_Frame[3], m_Frame[0], new Scalar(255, 0, 0), 3);
+                    */
                     Utils.matToTexture2D(rgbaMat, texture, colors);
-                    // Utils.matToTexture2D(m_Binary, texture, colors);
                     /*
                     Mat subMat = new Mat(28, 28, CvType.CV_8UC4);
                     subMat = rgbaMat.submat(0, 28, 0, 28);
@@ -491,14 +492,15 @@ namespace OpenCVForUnitySample
         {
             m_Squares.Clear();
             m_Squares = FigProc.FindSquares(m_Binary.clone());
-            // m_Squares = FilterSquares(m_Squares);
+            m_Squares = Card.FilterSquares(m_Squares);
             for (int i = 0; i < m_Squares.Count; i++)
             {
-                Core.line(m_Binary, m_Squares[i][0], m_Squares[i][1], new Scalar(255, 0, 0), 3);
-                Core.line(m_Binary, m_Squares[i][1], m_Squares[i][2], new Scalar(255, 0, 0), 3);
-                Core.line(m_Binary, m_Squares[i][2], m_Squares[i][3], new Scalar(255, 0, 0), 3);
-                Core.line(m_Binary, m_Squares[i][3], m_Squares[i][0], new Scalar(255, 0, 0), 3);
+                Core.line(rgbaMat, m_Squares[i][0], m_Squares[i][1], new Scalar(255, 0, 0), 3);
+                Core.line(rgbaMat, m_Squares[i][1], m_Squares[i][2], new Scalar(255, 0, 0), 3);
+                Core.line(rgbaMat, m_Squares[i][2], m_Squares[i][3], new Scalar(255, 0, 0), 3);
+                Core.line(rgbaMat, m_Squares[i][3], m_Squares[i][0], new Scalar(255, 0, 0), 3);
             }
+            Debug.Log("Square Number: " + m_Squares.Count.ToString());
         }
 
         private void DetectCard()
