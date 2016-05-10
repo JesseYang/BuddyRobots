@@ -38,13 +38,14 @@ namespace OpenCVForUnitySample
 
             if (((int)cardType & (int)CardType.Digit) > 0)
             {
-                Sample = ReadData(Application.persistentDataPath + "/cards/50/digit_TrainingData.yml", Sample, true);
-                Response = ReadData(Application.persistentDataPath + "/cards/50/digit_LabelData.yml", Response, false);
+                Sample = ReadData(Application.dataPath + "/cards/digit_TrainingData.yml", Sample, true);
+                // Sample = ReadData(Application.persistentDataPath + "/cards/digit_TrainingData.yml", Sample, true);
+                Response = ReadData(Application.dataPath + "/cards/digit_LabelData.yml", Response, false);
             }
             if (((int)cardType & (int)CardType.Letter) > 0)
             {
-                Sample = ReadData(Application.persistentDataPath + "/cards/50/letter_TrainingData.yml", Sample, true);
-                Response = ReadData(Application.persistentDataPath + "/cards/50/letter_LabelData.yml", Response, false);
+                Sample = ReadData(Application.dataPath + "/cards/letter_TrainingData.yml", Sample, true);
+                Response = ReadData(Application.dataPath + "/cards/letter_LabelData.yml", Response, false);
             }
 
             m_Knn.train(Sample, Response);

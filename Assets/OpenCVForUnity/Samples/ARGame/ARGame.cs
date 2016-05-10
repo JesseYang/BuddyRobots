@@ -71,6 +71,10 @@ namespace OpenCVForUnitySample
         private Mat m_FigToSubmit;
         /******************************/
 
+        /**** for switch color ****/
+        private bool m_ShowBinary;
+        /**************************/
+
         WebCamTexture webCamTexture;
         WebCamDevice webCamDevice;
 
@@ -78,8 +82,8 @@ namespace OpenCVForUnitySample
 
         public bool shouldUseFrontFacing = true;
 
-        int width = 1920;
-        int height = 1080;
+        int width = 1280;
+        int height = 720;
 
         Mat rgbaMat;
 
@@ -180,8 +184,8 @@ namespace OpenCVForUnitySample
             /**********************/
 
             /**** for card recgonition ****/
-            /*
-            m_Card = new Card(CardType.Digit | CardType.Letter);
+            // m_Card = new Card(CardType.Digit | CardType.Letter);
+            m_Card = new Card(CardType.Digit);
             m_RecognizedCards = new List<int>();
             m_Squares = new List<List<Point>>();
             m_Apples = new List<GameObject>(9);
@@ -190,7 +194,6 @@ namespace OpenCVForUnitySample
             {
                 m_Apples.Add(new GameObject());
             }
-            */
             /******************************/
 
             /**** for square detection ****/
@@ -207,6 +210,10 @@ namespace OpenCVForUnitySample
             /**** for figture detect and submit ****/
             m_FigToSubmit = new Mat();
             /***************************************/
+
+            /**** for switch color ****/
+            m_ShowBinary = false;
+            /**************************/
 
             while (true)
             {
@@ -283,7 +290,7 @@ namespace OpenCVForUnitySample
                 }
                 */
 
-                Core.flip(rgbaMat, rgbaMat, 1);
+                // Core.flip(rgbaMat, rgbaMat, 1);
 
                 if (m_ChangeView)
                 {
@@ -311,7 +318,6 @@ namespace OpenCVForUnitySample
                     m_ThreadDetectCard.Start();
                 }
                 */
-
                 /*
                 if (m_DetectFigure == true)
                 {
@@ -362,7 +368,7 @@ namespace OpenCVForUnitySample
                     Core.line(rgbaMat, m_Frame[2], m_Frame[3], new Scalar(255, 0, 0), 3);
                     Core.line(rgbaMat, m_Frame[3], m_Frame[0], new Scalar(255, 0, 0), 3);
                     */
-                    Utils.matToTexture2D(rgbaMat, texture, colors);
+                    Utils.matToTexture2D(m_ShowBinary ? m_Binary : rgbaMat, texture, colors);
                     /*
                     Mat subMat = new Mat(28, 28, CvType.CV_8UC4);
                     subMat = rgbaMat.submat(0, 28, 0, 28);
@@ -511,10 +517,10 @@ namespace OpenCVForUnitySample
             Imgproc.cvtColor(m_Binary, m_Color, Imgproc.COLOR_GRAY2BGR);
             for (int i = 0; i < m_Squares.Count; i++)
             {
-                Core.line(m_Color, m_Squares[i][0], m_Squares[i][1], new Scalar(255, 0, 0), 3);
-                Core.line(m_Color, m_Squares[i][1], m_Squares[i][2], new Scalar(255, 0, 0), 3);
-                Core.line(m_Color, m_Squares[i][2], m_Squares[i][3], new Scalar(255, 0, 0), 3);
-                Core.line(m_Color, m_Squares[i][3], m_Squares[i][0], new Scalar(255, 0, 0), 3);
+                Core.line(rgbaMat, m_Squares[i][0], m_Squares[i][1], new Scalar(255, 0, 0), 3);
+                Core.line(rgbaMat, m_Squares[i][1], m_Squares[i][2], new Scalar(255, 0, 0), 3);
+                Core.line(rgbaMat, m_Squares[i][2], m_Squares[i][3], new Scalar(255, 0, 0), 3);
+                Core.line(rgbaMat, m_Squares[i][3], m_Squares[i][0], new Scalar(255, 0, 0), 3);
             }
             // m_Mutex.ReleaseMutex();
             string str = "";
@@ -730,6 +736,11 @@ namespace OpenCVForUnitySample
         public void StartDetectFig()
         {
             m_DetectFig = true;
+        }
+
+        public void SwitchColor()
+        {
+            m_ShowBinary = !m_ShowBinary;
         }
 
     }
